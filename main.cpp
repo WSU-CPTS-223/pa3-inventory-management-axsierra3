@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include "Product.hpp"
+#include "fileParser.hpp"
 
 using namespace std;
 
@@ -48,6 +50,39 @@ void bootStrap()
     // example: reading from CSV and initializing the data structures
     // Don't dump all code into this single function
     // use proper programming practices
+
+    std::ifstream inputFile("miniData.csv");
+    string buffer, categoryBuffer;
+    string ID, prodName, brand, asin, details;
+    size_t delim;
+
+    getline(inputFile, buffer); //eat first line
+    while( getline(inputFile, buffer) ) 
+    {
+        ID = parseField(buffer);
+        prodName = parseField(buffer);
+        brand = parseField(buffer);
+        asin = parseField(buffer);
+        categoryBuffer = parseField(buffer);
+        string categories[10] = {"N/A"}; 
+
+        for(int i = 0; i < 10; i++)
+        {
+            delim = categoryBuffer.find('|'); //find the separator
+            if (delim != string::npos) //we fouund a sepator (multiple categoties)
+            {
+                categories[i] = categoryBuffer.substr(0, delim); //get single category in array w/out the spaces around it
+                categoryBuffer = categoryBuffer.substr(delim + 1, categoryBuffer.length()); //crop and look for another sepator
+            }
+            else {
+                categories[i] = categoryBuffer; //only one category or last category
+                break;
+            }
+        }
+        details = buffer; //rest of line stored in details
+        Product newProduct(ID, prodName, brand, asin, categories, details); //store new product
+        cout << newProduct << endl; //TESTING PARSINGak
+    }
 }
 
 int main(int argc, char const *argv[])
