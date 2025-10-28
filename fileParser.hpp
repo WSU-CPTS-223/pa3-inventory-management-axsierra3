@@ -4,7 +4,6 @@
 //this funct modifies the buffer between calls, gets called once for each field that we want to save
 std::string parseField(string& buffer)
 {
-    //TODO: figure out double comma logic so that price always works
     string field;
     size_t delim = 0;
 

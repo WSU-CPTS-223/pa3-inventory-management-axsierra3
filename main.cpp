@@ -2,8 +2,12 @@
 #include <string>
 #include "Product.hpp"
 #include "fileParser.hpp"
+#include "HashTable.hpp"
 
 using namespace std;
+
+HashTable <string, Product> productTable; //global hash table that maps each uniq ID to the product that matches it
+HashTable <string, List<Product> > categoryTable;  //global hash table that maps each category to a list of every product that had that category
 
 void printHelp()
 {
@@ -21,7 +25,7 @@ bool validCommand(string line)
            (line.rfind("listInventory") == 0);
 }
 
-void evalCommand(string line)
+void evalCommand(string line) //added in reference tpo product table
 {
     if (line == ":help")
     {
@@ -31,7 +35,20 @@ void evalCommand(string line)
     else if (line.rfind("find", 0) == 0)
     {
         // Look up the appropriate datastructure to find if the inventory exist
-        cout << "YET TO IMPLEMENT!" << endl;
+        size_t bracket1 = line.find('<');
+        size_t bracket2 = line.find('>');
+        
+        string inventoryID = line.substr(bracket1 + 1, (bracket2 - bracket1) - 1); //everything between the brackets
+
+        Product* foundProduct = productTable.find(inventoryID); //look up in hash table, assign to product ptr
+        if(foundProduct != nullptr) //found
+        {
+            cout << *foundProduct << endl; //print it using overloaded op
+        }
+        else 
+        {
+            cout << "Inventory/Product not found" << endl;
+        }
     }
     // if line starts with listInventory
     else if (line.rfind("listInventory") == 0)
@@ -55,6 +72,7 @@ void bootStrap()
     string buffer, categoryBuffer;
     string ID, prodName, brand, asin, extraInfo, details;
     size_t delim;
+
 
     getline(inputFile, buffer); //eat first line
     while( getline(inputFile, buffer) ) 
@@ -87,7 +105,10 @@ void bootStrap()
         string price = parseField(buffer);
         details = buffer; //rest of line stored in details
         Product newProduct(ID, prodName, categories, price, details); //store new product
-        cout << newProduct << endl; //TESTING 
+        // cout << newProduct << endl; //TESTING 
+
+        productTable.insert(ID, newProduct); //insert into hash
+
     }
 }
 
