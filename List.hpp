@@ -15,7 +15,6 @@ class List {
     private:
     Node<T>* mpHead; //head of list
 
-
     public:
     List(): mpHead(nullptr) {}; //constructor, null head
 
@@ -23,7 +22,8 @@ class List {
 
     Node<T>* getHeadPtr(); //getter 
 
-    // T* findNode(T& targetData); //return ptr to node w matching data or null
+    void print();
+
 
 };
 
@@ -48,26 +48,17 @@ template <typename T>
     return mpHead;
    }
 
- //lowk dont know how im gonna do this one (or if it matters) seeing itd be comparing products w same hash value soooo
+   template <typename T>
+   void List<T>::print()
+   {
+    Node<T>* currNode = mpHead;
 
+    while(currNode != nullptr)
+    {
+        cout << currNode->mData << endl;
+
+        currNode = currNode->mpNext;
+    }
+   }
  
-//  template <typename T>
-//  T* List<T>::findNode(T& targetData)
-//  {
-//     //case 1: empty list
-//     if(mpHead == nullptr)
-//     {
-//         return nullpr;
-//     }
-//     //non empty list
-//     Node<T>* curr = mpHead;
-//     while(curr != nullptr)
-//     {
-//         if(curr->mData == targetData) //found 
-//         {
-//             return curr-; //return  
-//         }
-//         curr = curr->mpNext; //next node
-//     }
-//     return nullptr; //not found
-//  }
+

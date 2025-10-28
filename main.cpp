@@ -54,7 +54,20 @@ void evalCommand(string line) //added in reference tpo product table
     else if (line.rfind("listInventory") == 0)
     {
         // Look up the appropriate datastructure to find all inventory belonging to a specific category
-        cout << "YET TO IMPLEMENT!" << endl;
+        size_t bracket1 = line.find('<');
+        size_t bracket2 = line.find('>');
+        
+        string category_string = line.substr(bracket1 + 1, (bracket2 - bracket1) - 1); //everything between the brackets
+
+        List<Product>* foundCatList = categoryTable.find(category_string);
+        if(foundCatList != nullptr)
+        {
+            foundCatList->print(); //print all the prods that match that
+        }
+        else 
+        {
+            cout << "Invalid Category" << endl;
+        }
     }
 }
 
@@ -87,9 +100,12 @@ void bootStrap()
         for(int i = 0; i < 10; i++)
         {
             delim = categoryBuffer.find('|'); //find the separator
-            if (delim != string::npos) //we fouund a sepator (multiple categoties)
+            if (delim != string::npos) //we actually found a sepator (multiple categories)
             {
-                categories[i] = categoryBuffer.substr(0, delim); //get single category in array w/out the spaces around it
+                categories[i] = categoryBuffer.substr(0, delim); //get single category in array 
+                categories[i].erase(0, categories[i].find_first_not_of(" ")); //trimming the leading white space by erasing everying from start to first non space char
+                categories[i].erase(categories[i].find_last_not_of(" ") + 1);  //trimming the trailing white space by erasing everyhting from one after the last non white space
+
                 categoryBuffer = categoryBuffer.substr(delim + 1, categoryBuffer.length()); //crop and look for another sepator
             }
             else {
@@ -107,8 +123,32 @@ void bootStrap()
         Product newProduct(ID, prodName, categories, price, details); //store new product
         // cout << newProduct << endl; //TESTING 
 
-        productTable.insert(ID, newProduct); //insert into hash
+        productTable.insert(ID, newProduct); //insert into ID based hash
 
+        //now inserting into category based hash
+        for(int i = 0; i < 10; i++)
+        {
+            if(categories[i] == "N/A")
+            {
+                break; //if theres no categories for that prod theres nothing to insert
+            }
+
+            List<Product>* currCatList = categoryTable.find(categories[i]); //find will return a ptr to list of all products mathcing that category key---if it exists, otherwise, it returns nullptr
+
+            //so if we already added that category, lets add this new product to its list inside hash
+            if(currCatList != nullptr)
+            {
+            currCatList->insertAtFront(newProduct);
+            }
+            //else, this is a new category we havent added yet! (no list found), lets make a list
+            else 
+            {
+                List<Product> newCategoryList; //make new list
+
+                newCategoryList.insertAtFront(newProduct); //add first product item of that cat
+                categoryTable.insert(categories[i], newCategoryList); //insert key and new list
+            }
+        }
     }
 }
 
