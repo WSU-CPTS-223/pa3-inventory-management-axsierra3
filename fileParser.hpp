@@ -4,6 +4,7 @@
 //this funct modifies the buffer between calls, gets called once for each field that we want to save
 std::string parseField(string& buffer)
 {
+    //TODO: figure out double comma logic so that price always works
     string field;
     size_t delim = 0;
 
@@ -23,7 +24,7 @@ std::string parseField(string& buffer)
     } //else keep looking
 
     }
-    field = buffer.substr(0, delim + 1); //inclduing quotes
+    field = buffer.substr(1, delim - 1); //dont include quotes
     buffer = buffer.substr(delim + 1, buffer.length()); //crop it to after comma
    }
 
@@ -32,7 +33,7 @@ std::string parseField(string& buffer)
    {
     delim = buffer.find(','); //index of first comma
     field = buffer.substr(0, delim); //field is everything from 0 to delim
-    if(delim == 0 && buffer[delim + 1] == ',') //if empty field w/ double comma
+    if(delim == 0 && buffer[1] == ',' && buffer[2] == ',') //if empty field w/ double comma
     {
         buffer = buffer.substr(delim + 2, buffer.length()); //skip the comma after it too if there is one
     }
@@ -45,5 +46,4 @@ std::string parseField(string& buffer)
         return "N/A";
     }
     return field;
-
 }

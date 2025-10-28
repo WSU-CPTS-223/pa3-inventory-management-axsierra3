@@ -14,7 +14,7 @@
 
  std::ostream& operator<<(std::ostream& os, Product& product)
   {
-        os << "Product Name: "<<  product.mProductName << endl << "Brand: " << product.mBrandName << endl << "ASIN: " << product.mAsin << endl << "Categories: ";
+        os << "Product Name: "<<  product.mProductName << endl << "Price: " << product.mPrice << endl << "Categories: ";
         for (string category : product.mCategories)
         {
             if(category == "N/A")

@@ -16,8 +16,8 @@ using std::string;
 class Product {
     public:
     //constructor
-    Product(string uniqID, string productName, string brandName, string asin, string categories[10], string details) :
-        mUniqID(uniqID), mProductName(productName), mBrandName(brandName), mAsin(asin), mDetails(details) 
+    Product(string uniqID, string productName, string categories[10], string price, string details) :
+        mUniqID(uniqID), mProductName(productName), mPrice(price), mDetails(details) 
         {
             for(int i = 0; i < 10; i++)
             {
@@ -36,6 +36,6 @@ class Product {
 
     private:
     //fields
-    string mUniqID, mProductName, mBrandName, mAsin, mDetails;
+    string mUniqID, mProductName, mPrice, mDetails;
     string mCategories[10];
 };

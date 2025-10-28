@@ -53,7 +53,7 @@ void bootStrap()
 
     std::ifstream inputFile("miniData.csv");
     string buffer, categoryBuffer;
-    string ID, prodName, brand, asin, details;
+    string ID, prodName, brand, asin, extraInfo, details;
     size_t delim;
 
     getline(inputFile, buffer); //eat first line
@@ -61,8 +61,8 @@ void bootStrap()
     {
         ID = parseField(buffer);
         prodName = parseField(buffer);
-        brand = parseField(buffer);
-        asin = parseField(buffer);
+        extraInfo = parseField(buffer); //brand always empty according to Kaggle
+        extraInfo = parseField(buffer); //ASIN always empty
         categoryBuffer = parseField(buffer);
         string categories[10] = {"N/A"}; 
 
@@ -75,13 +75,19 @@ void bootStrap()
                 categoryBuffer = categoryBuffer.substr(delim + 1, categoryBuffer.length()); //crop and look for another sepator
             }
             else {
+                if(categoryBuffer != "\"\"") //not empty quotes
+                {
                 categories[i] = categoryBuffer; //only one category or last category
+                }
                 break;
             }
         }
+        extraInfo = parseField(buffer); //upc and list price are always null according to Kaggle documentation
+        extraInfo = parseField(buffer);
+        string price = parseField(buffer);
         details = buffer; //rest of line stored in details
-        Product newProduct(ID, prodName, brand, asin, categories, details); //store new product
-        cout << newProduct << endl; //TESTING PARSINGak
+        Product newProduct(ID, prodName, categories, price, details); //store new product
+        cout << newProduct << endl; //TESTING 
     }
 }
 
