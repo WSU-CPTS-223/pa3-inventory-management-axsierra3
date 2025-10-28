@@ -3,6 +3,7 @@
 #include "Product.hpp"
 #include "fileParser.hpp"
 #include "HashTable.hpp"
+#include "test.hpp"
 
 using namespace std;
 
@@ -81,7 +82,7 @@ void bootStrap()
     // Don't dump all code into this single function
     // use proper programming practices
 
-    std::ifstream inputFile("miniData.csv");
+    std::ifstream inputFile("productData.csv");
     string buffer, categoryBuffer;
     string ID, prodName, brand, asin, extraInfo, details;
     size_t delim;
@@ -154,6 +155,9 @@ void bootStrap()
 
 int main(int argc, char const *argv[])
 {
+    //test cases
+    // testAll();
+
     string line;
     bootStrap();
     while (getline(cin, line) && line != ":quit")
